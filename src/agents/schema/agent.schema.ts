@@ -13,8 +13,19 @@ export class Agent {
   @Prop({ required: true })
   surname: string;
 
-  @Prop({ required: false })
-  reference?: string;
+  @Prop({
+    required: false,
+    type: {
+      name: { type: String },
+      surname: { type: String },
+      company: { type: String },
+    },
+  })
+  reference?: {
+    name?: string;
+    surname?: string;
+    company?: string;
+  };
 
   @Prop({ required: true, unique: true })
   email: string;

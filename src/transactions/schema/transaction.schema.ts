@@ -1,6 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
+import { TransactionHistoryEntry } from '../types/transaction-history.type';
 import { Agent } from '../../agents/schema/agent.schema';
+
+const transactionHistorySchema = new MongooseSchema<TransactionHistoryEntry>(
+  {
+    type: {
+      type: String,
+      enum: [
+        'ChangeStage',
+        'AddListingAgent',
+        'AddSellingAgent',
+        'Payment',
+        'Update',
+      ],
+      required: true,
+    },
+    payload: { type: MongooseSchema.Types.Mixed, default: {} },
+    createdAt: { type: Date, default: () => new Date() },
+  },
+  { _id: false },
+);
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -27,6 +47,13 @@ export class Transaction {
   })
   stage: string;
 
+  @Prop({
+    required: true,
+    default: null,
+    enum: ['agreement', 'earnest_money', 'title_deed', 'completed', null],
+  })
+  previousStage?: string;
+
   @Prop({ required: true, default: 0 })
   total_fee: number;
 
@@ -41,6 +68,9 @@ export class Transaction {
     default: [],
   })
   selling_agents?: Types.ObjectId[];
+
+  @Prop({ type: [transactionHistorySchema], default: [] })
+  transactionHistory?: TransactionHistoryEntry[];
 }
 
 export const transactionSchema = SchemaFactory.createForClass(Transaction);
