@@ -2,6 +2,16 @@
 
 A comprehensive NestJS-based API for managing real estate transactions, agents, and commission calculations.
 
+## 🌐 Live API
+
+**Base URL**: https://iceberg-production-af7d.up.railway.app/
+
+**Swagger Documentation**: https://iceberg-production-af7d.up.railway.app/api
+
+The API is connected to MongoDB Atlas and uses the connection string from the environment variables.
+
+---
+
 ## Features
 
 - 🏢 **Agent Management**: Create and manage real estate agents
@@ -26,8 +36,10 @@ npm install
 Create a `.env` file in the root directory:
 ```env
 PORT=3000
-DATABASE_URL=your_mongodb_connection_string
+DATABASE_URL=your_mongodb_atlas_connection_string
 ```
+
+**Note**: The application connects to MongoDB Atlas using the `DATABASE_URL` from your environment variables. You can use the same connection string format as MongoDB Atlas provides.
 
 **Step 3: Start the Application**
 ```bash
@@ -57,8 +69,10 @@ npm install
 Proje kök dizininde `.env` dosyası oluşturun:
 ```env
 PORT=3000
-DATABASE_URL=mongodb_bağlantı_string_iniz
+DATABASE_URL=mongodb_atlas_bağlantı_string_iniz
 ```
+
+**Not**: Uygulama, ortam değişkenlerindeki `DATABASE_URL` kullanarak MongoDB Atlas'a bağlanır. MongoDB Atlas'ın sağladığı bağlantı string formatını kullanabilirsiniz.
 
 **Adım 3: Uygulamayı Başlatın**
 ```bash
@@ -79,7 +93,9 @@ http://localhost:3000/api
 
 ## 📚 API Documentation
 
-**Swagger UI**: `http://localhost:3000/api`
+**Local Swagger UI**: `http://localhost:3000/api`
+
+**Live Swagger UI**: https://iceberg-production-af7d.up.railway.app/api
 
 Features:
 - Interactive API testing
