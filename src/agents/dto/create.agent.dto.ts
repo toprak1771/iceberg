@@ -11,7 +11,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 
 class ReferenceDto {
   @ApiPropertyOptional({
@@ -116,18 +120,12 @@ export class CreateAgentDto {
   @IsNumber()
   total_vesting?: number;
 
-  @ApiPropertyOptional({
-    description: 'Job start date',
-    example: '2024-01-01T00:00:00.000Z',
-  })
+  @ApiHideProperty()
   @IsOptional()
   @IsDate()
   job_started_at?: Date;
 
-  @ApiPropertyOptional({
-    description: 'Job end date',
-    example: '2024-12-31T00:00:00.000Z',
-  })
+  @ApiHideProperty()
   @IsOptional()
   @IsDate()
   job_ended_at?: Date;
