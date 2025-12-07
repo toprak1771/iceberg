@@ -95,15 +95,17 @@ export class TransactionsService {
       }
 
       // Add transaction history for commission calculation with agent details
-      const transactionWithCommissionHistory = await this.addTransactionHistory({
-        _id: data._id,
-        type: 'CommissionCalculation',
-        payload: {
-          details: `Commission calculated for ${data.stage} at ${new Date().toISOString()}`,
-          agencyAmount: commission?.agencyAmount || 0,
-          agents: agentsData,
+      const transactionWithCommissionHistory = await this.addTransactionHistory(
+        {
+          _id: data._id,
+          type: 'CommissionCalculation',
+          payload: {
+            details: `Commission calculated for ${data.stage} at ${new Date().toISOString()}`,
+            agencyAmount: commission?.agencyAmount || 0,
+            agents: agentsData,
+          },
         },
-      });
+      );
       if (transactionWithCommissionHistory) {
         updatedTransaction = transactionWithCommissionHistory;
       }
@@ -121,8 +123,15 @@ export class TransactionsService {
     return updatedTransaction;
   }
 
-  async addAgent(data: AddAgentDto): Promise<TransactionDocument | null> {
-    return this.transactionsRepository.addAgent(data);
+  async addAgent(data: AddAgentDto): Promise<TransactionDocument> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const updated = (await this.transactionsRepository.addAgent(
+      data,
+    )) as TransactionDocument | null;
+    if (!updated) {
+      throw new NotFoundException('Transaction not found to add agent');
+    }
+    return updated;
   }
 
   controlStage(stage: string, previousStage: string): boolean {
@@ -191,16 +200,19 @@ export class TransactionsService {
     _transaction: TransactionDocument,
   ): Promise<CommissionDocument | null> {
     // Calculate commission - will be implemented later
-    const commission =
-      await this.commissionService.calculateCommission(_transaction);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const commission = (await this.commissionService.calculateCommission(
+      _transaction,
+    )) as CommissionDocument | null;
     return commission;
   }
 
-  private async addTransactionHistory(data: {
+  private addTransactionHistory(data: {
     _id: string;
     type: TransactionHistoryEntry['type'];
     payload: TransactionHistoryEntry['payload'];
   }): Promise<TransactionDocument | null> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return this.transactionsRepository.addTransactionHistory(data);
   }
 }

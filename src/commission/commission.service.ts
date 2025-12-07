@@ -36,29 +36,41 @@ export class CommissionService {
       agencyAmount = _transaction.total_fee;
       agents = [];
     } else {
-      // If agents exist: 50% agency, 50% distributed among agents
       agencyAmount = _transaction.total_fee / 2;
       const agentsTotalAmount = _transaction.total_fee - agencyAmount;
-      const eachAgentAmount = agentsTotalAmount / agentsCount;
 
-      // Map listing agents to commission agent objects
-      const commissionListingAgentsArray = listingAgents.map((agent) => ({
-        agentId: agent.toString(), // Convert ObjectId to string for DTO
-        role: 'listing' as const,
-        amount: eachAgentAmount,
-      }));
+      const hasListing = listingAgents.length > 0;
+      const hasSelling = sellingAgents.length > 0;
 
-      // Map selling agents to commission agent objects
-      const commissionSellingAgentsArray = sellingAgents.map((agent) => ({
-        agentId: agent.toString(), // Convert ObjectId to string for DTO
-        role: 'selling' as const,
-        amount: eachAgentAmount,
-      }));
+      if (agentIds.length === 1) {
+        const agentId = agentIds[0].toString();
+        if (hasListing && hasSelling) {
+          agents = [
+            { agentId, role: 'listing', amount: agentsTotalAmount / 2 },
+            { agentId, role: 'selling', amount: agentsTotalAmount / 2 },
+          ];
+        } else {
+          agents = [
+            {
+              agentId,
+              role: hasListing ? 'listing' : 'selling',
+              amount: agentsTotalAmount,
+            },
+          ];
+        }
+      } else {
+        const uniqueCount = agentIds.length;
+        const eachAgentAmount = agentsTotalAmount / uniqueCount;
 
-      agents = [
-        ...commissionListingAgentsArray,
-        ...commissionSellingAgentsArray,
-      ];
+        const pickRole = (id: string): 'listing' | 'selling' =>
+          listingAgents.some((a) => a.toString() === id) ? 'listing' : 'selling';
+
+        agents = agentIds.map((id) => ({
+          agentId: id.toString(),
+          role: pickRole(id.toString()),
+          amount: eachAgentAmount,
+        }));
+      }
     }
 
     const commission = await this.commissionRepository.create({
