@@ -19,14 +19,6 @@ export enum StageEnum {
 }
 
 export class CreateTransactionDto {
-  @ApiPropertyOptional({
-    description: 'Transaction ID (MongoDB ObjectId)',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @IsOptional()
-  @IsMongoId()
-  _id: string;
-
   @ApiProperty({
     description: 'Transaction name',
     example: 'Deal #1234',

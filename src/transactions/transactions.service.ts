@@ -22,6 +22,30 @@ export class TransactionsService {
   ) {}
 
   async create(data: CreateTransactionDto): Promise<TransactionDocument> {
+    // Validate all listing agents exist
+    if (data.listing_agents && data.listing_agents.length > 0) {
+      for (const agentId of data.listing_agents) {
+        const agent = await this.agentsService.findById(agentId);
+        if (!agent) {
+          throw new NotFoundException(
+            `Listing agent with ID ${agentId} not found`,
+          );
+        }
+      }
+    }
+
+    // Validate all selling agents exist
+    if (data.selling_agents && data.selling_agents.length > 0) {
+      for (const agentId of data.selling_agents) {
+        const agent = await this.agentsService.findById(agentId);
+        if (!agent) {
+          throw new NotFoundException(
+            `Selling agent with ID ${agentId} not found`,
+          );
+        }
+      }
+    }
+
     return this.transactionsRepository.create(data);
   }
 

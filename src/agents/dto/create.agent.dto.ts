@@ -3,7 +3,6 @@ import {
   IsBoolean,
   IsDate,
   IsEmail,
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -44,14 +43,6 @@ class ReferenceDto {
 }
 
 export class CreateAgentDto {
-  @ApiPropertyOptional({
-    description: 'Agent ID (MongoDB ObjectId)',
-    example: '507f1f77bcf86cd799439011',
-  })
-  @IsOptional()
-  @IsMongoId()
-  _id: string;
-
   @ApiProperty({
     description: 'Agent first name',
     example: 'Jane',
