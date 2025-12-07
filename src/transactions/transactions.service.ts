@@ -133,6 +133,13 @@ export class TransactionsService {
   }
 
   async addAgent(data: AddAgentDto): Promise<TransactionDocument> {
+    // Check if agent exists
+    const agent = await this.agentsService.findById(data.agent_id);
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+
+    // Add agent to transaction
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const updated = await this.transactionsRepository.addAgent(data);
     if (!updated) {
