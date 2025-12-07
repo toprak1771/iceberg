@@ -62,6 +62,7 @@ export class TransactionsRepository {
             createdAt: new Date(),
           },
         },
+        isActive: false,
       },
       { new: true },
     );
