@@ -8,12 +8,29 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { TransactionsService } from './transactions.service';
 import { PdfService } from '../services/pdf.service';
 import { CreateTransactionDto } from './dto/create.transaction.dto';
 import { UpdateTransactionDto } from './dto/update.stage.transaction.dto';
 import { AddAgentDto } from './dto/add.agent.dto';
+import {
+  TransactionResponseDto,
+  TransactionHistoryResponseDto,
+} from './dto/transaction.response.dto';
+import { FinancialBreakdownItemDto } from './dto/financial-breakdown.response.dto';
+
+@ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
   constructor(
@@ -22,6 +39,14 @@ export class TransactionsController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new transaction' })
+  @ApiCreatedResponse({
+    description: 'Transaction successfully created',
+    type: TransactionResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request - validation failed',
+  })
   async create(@Body() dto: CreateTransactionDto, @Res() response: Response) {
     try {
       const savedTransaction = await this.transactionsService.create(dto);
@@ -37,6 +62,14 @@ export class TransactionsController {
   }
 
   @Get('all')
+  @ApiOperation({ summary: 'Get all transactions' })
+  @ApiOkResponse({
+    description: 'List of all transactions',
+    type: [TransactionResponseDto],
+  })
+  @ApiBadRequestResponse({
+    description: 'Failed to retrieve transactions',
+  })
   async findAll(@Res() response: Response) {
     try {
       const transactions = await this.transactionsService.findAll();
@@ -52,6 +85,14 @@ export class TransactionsController {
   }
 
   @Put('changeStage')
+  @ApiOperation({ summary: 'Update transaction stage' })
+  @ApiOkResponse({
+    description: 'Transaction stage successfully updated',
+    type: TransactionResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request - invalid stage transition',
+  })
   async changeStage(
     @Body() dto: UpdateTransactionDto,
     @Res() response: Response,
@@ -69,6 +110,14 @@ export class TransactionsController {
   }
 
   @Post('addAgent')
+  @ApiOperation({ summary: 'Add an agent to a transaction' })
+  @ApiOkResponse({
+    description: 'Agent successfully added to transaction',
+    type: TransactionResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request - validation failed',
+  })
   async addAgent(@Body() dto: AddAgentDto, @Res() response: Response) {
     try {
       const addedAgent = await this.transactionsService.addAgent(dto);
@@ -81,6 +130,16 @@ export class TransactionsController {
   }
 
   @Get('financialBreakdown')
+  @ApiOperation({
+    summary: 'Get financial breakdown of completed transactions',
+  })
+  @ApiOkResponse({
+    description: 'Financial breakdown data',
+    type: [FinancialBreakdownItemDto],
+  })
+  @ApiBadRequestResponse({
+    description: 'Failed to retrieve financial breakdown',
+  })
   async financialBreakdown(@Res() response: Response) {
     try {
       const financialBreakdown =
@@ -97,6 +156,17 @@ export class TransactionsController {
   }
 
   @Get('financialBreakdown/pdf')
+  @ApiOperation({ summary: 'Generate PDF report of financial breakdown' })
+  @ApiOkResponse({
+    description: 'PDF file generated successfully',
+    content: {
+      'application/pdf': {},
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Failed to generate PDF',
+  })
   async financialBreakdownPdf(@Res() response: Response) {
     try {
       const financialBreakdown =
@@ -119,6 +189,19 @@ export class TransactionsController {
   }
 
   @Get(':id/history')
+  @ApiOperation({ summary: 'Get transaction history by transaction ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'Transaction ID (MongoDB ObjectId)',
+    example: '6934c32095082ae0c565a7e4',
+  })
+  @ApiOkResponse({
+    description: 'Transaction history retrieved successfully',
+    type: [TransactionHistoryResponseDto],
+  })
+  @ApiBadRequestResponse({
+    description: 'Failed to retrieve transaction history',
+  })
   async findTransactionHistoryById(
     @Param('id') id: string,
     @Res() response: Response,
@@ -138,6 +221,25 @@ export class TransactionsController {
   }
 
   @Get(':id/history/pdf')
+  @ApiOperation({ summary: 'Generate PDF report of transaction history' })
+  @ApiParam({
+    name: 'id',
+    description: 'Transaction ID (MongoDB ObjectId)',
+    example: '6934c32095082ae0c565a7e4',
+  })
+  @ApiOkResponse({
+    description: 'PDF file generated successfully',
+    content: {
+      'application/pdf': {},
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Transaction not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Failed to generate PDF',
+  })
   async findTransactionHistoryPdf(
     @Param('id') id: string,
     @Res() response: Response,
@@ -153,7 +255,6 @@ export class TransactionsController {
 
       const history =
         await this.transactionsService.findTransactionHistoryById(id);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const pdfBuffer = await this.pdfService.generateTransactionHistoryPdf(
         transaction._id.toString(),
         transaction.name || 'N/A',

@@ -1,0 +1,316 @@
+{
+  "info": {
+    "_postman_id": "c35a7134-2d2f-4a5f-b4e0-6456731a4c4e",
+    "name": "Iceberg",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21120881",
+    "_collection_link": "https://lively-satellite-378223.postman.co/workspace/ed5c12b9-95ad-45be-8e83-b681f66bc001/collection/21120881-c35a7134-2d2f-4a5f-b4e0-6456731a4c4e?action=share&source=collection_link&creator=21120881"
+  },
+  "item": [
+    {
+      "name": "agents",
+      "item": [
+        {
+          "name": "create agent",
+          "id": "1d20ae3d-0eb2-4f72-bfc6-9a064c107999",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"test selling\",\n    \"surname\": \"test\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+1-202-555-0100\",\n    \"reference\": {\n      \"name\": \"Ref\",\n      \"surname\": \"Person\",\n      \"company\": \"Acme\"\n    },\n    \"isActive\": true,\n    \"isDeleted\": false,\n    \"total_vesting\": 0\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/agents",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "agents"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:3000/agents \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Jane\",\n    \"surname\": \"Doe\",\n    \"email\": \"jane.doe@example.com\",\n    \"phone\": \"+1-202-555-0100\",\n    \"reference\": {\n      \"name\": \"Ref\",\n      \"surname\": \"Person\",\n      \"company\": \"Acme\"\n    },\n    \"isActive\": true,\n    \"isDeleted\": false,\n    \"total_vesting\": 0\n  }'"
+          },
+          "response": []
+        },
+        {
+          "name": "get all agent",
+          "id": "72fb9cf1-4d48-4ba2-969e-35333f402956",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/agents/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "agents",
+                "all"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:3000/agents \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Jane\",\n    \"surname\": \"Doe\",\n    \"email\": \"jane.doe@example.com\",\n    \"phone\": \"+1-202-555-0100\",\n    \"reference\": {\n      \"name\": \"Ref\",\n      \"surname\": \"Person\",\n      \"company\": \"Acme\"\n    },\n    \"isActive\": true,\n    \"isDeleted\": false,\n    \"total_vesting\": 0\n  }'"
+          },
+          "response": []
+        }
+      ],
+      "id": "bb917e90-d50f-4917-9c3e-bed4dfe46bc9"
+    },
+    {
+      "name": "transactions",
+      "item": [
+        {
+          "name": "add transaction",
+          "id": "71bbe6be-c9fa-4c71-a371-31132f419acd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Deal #1234\",\n    \"description\": \"Downtown listing\",\n    \"isActive\": true,\n    \"isDeleted\": false,\n    \"stage\": \"agreement\",\n    \"total_fee\": 120000,\n    \"listing_agents\": [\"6934c23c624e3563227bbad3\"],\n    \"selling_agents\": []\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/transactions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:3000/transactions \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"Deal #123\",\n    \"description\": \"Downtown listing\",\n    \"isActive\": true,\n    \"isDeleted\": false,\n    \"stage\": \"agreement\",\n    \"total_fee\": 120000,\n    \"listing_agents\": [\"<AGENT_ID_BURAYA>\"],\n    \"selling_agents\": []\n  }'"
+          },
+          "response": []
+        },
+        {
+          "name": "change stage",
+          "id": "3314634e-d68c-4426-99fa-55b5f3152a3c",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"_id\": \"6934c32095082ae0c565a7e4\",\n    \"stage\": \"completed\"\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/transactions/changeStage",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "changeStage"
+              ]
+            },
+            "description": "Generated from cURL: curl -X PUT http://localhost:3000/transactions/changeStage \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"_id\": \"YOUR_TRANSACTION_ID_HERE\",\n    \"stage\": \"earnest_money\"\n  }'"
+          },
+          "response": []
+        },
+        {
+          "name": "add agent",
+          "id": "c1f8d089-8159-4e36-903c-e63e8ff54bc9",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"_id\": \"6934c32095082ae0c565a7e4\",\n    \"agent_id\": \"69358fba3705cf36b744ac3c\",\n    \"role\": \"selling\"\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/transactions/addAgent",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "addAgent"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:3000/transactions/addAgent \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"_id\": \"65a1b2c3d4e5f6789abcdef0\",\n    \"agent_id\": \"65a1b2c3d4e5f6789abcdef1\",\n    \"role\": \"listing\"\n  }'"
+          },
+          "response": []
+        },
+        {
+          "name": "get financial breakdown",
+          "id": "70a08bd3-f284-41bb-9acc-00eb226e6282",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/transactions/financialBreakdown",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "financialBreakdown"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:3000/transactions/financialBreakdown \\\n  -H \"Content-Type: application/json\""
+          },
+          "response": []
+        },
+        {
+          "name": "get all transactions",
+          "id": "bbef7c26-acf7-4108-973b-1a4fd3f5b6c1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/transactions/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "all"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:3000/transactions/financialBreakdown \\\n  -H \"Content-Type: application/json\""
+          },
+          "response": []
+        },
+        {
+          "name": "financial breakdown pdf",
+          "id": "8ef68a41-861d-41be-8abb-927457b008ae",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/transactions/financialBreakdown/pdf",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "financialBreakdown",
+                "pdf"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:3000/transactions/financialBreakdown/pdf \\\n  --output financial-breakdown.pdf"
+          },
+          "response": []
+        },
+        {
+          "name": "get transaction history by id",
+          "id": "38f8664d-be20-4775-a5db-9228a98f86d6",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/transactions/6934c32095082ae0c565a7e4/history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "6934c32095082ae0c565a7e4",
+                "history"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:3000/transactions/507f1f77bcf86cd799439011/history"
+          },
+          "response": []
+        },
+        {
+          "name": "get pdf transaction history by id",
+          "id": "4297dc0f-f3d6-44c4-8b20-d456bf712dc2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/transactions/6934c32095082ae0c565a7e4/history/pdf",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "transactions",
+                "6934c32095082ae0c565a7e4",
+                "history",
+                "pdf"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET http://localhost:3000/transactions/507f1f77bcf86cd799439011/history"
+          },
+          "response": []
+        }
+      ],
+      "id": "8738cfff-f968-4a88-b622-76985a9fbb26"
+    }
+  ]
+}
