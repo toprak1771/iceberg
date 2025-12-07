@@ -13,5 +13,6 @@ import { CommissionRepository } from './commission.repository';
   ],
   controllers: [CommissionController],
   providers: [CommissionService, CommissionRepository],
+  exports: [CommissionService],
 })
 export class CommissionModule {}

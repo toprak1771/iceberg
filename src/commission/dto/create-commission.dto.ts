@@ -1,4 +1,11 @@
-import { IsArray, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsEnum } from 'class-validator';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
 
 export class CommissionAgentDto {
   @IsMongoId()
@@ -26,4 +33,3 @@ export class CreateCommissionDto {
   @IsArray()
   agents?: CommissionAgentDto[];
 }
-

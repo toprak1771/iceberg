@@ -10,4 +10,15 @@ export class AgentsService {
   async create(data: CreateAgentDto): Promise<AgentDocument> {
     return this.agentsRepository.create(data);
   }
+
+  async findById(id: string): Promise<AgentDocument | null> {
+    return this.agentsRepository.findById(id);
+  }
+
+  async addTotalVesting(
+    id: string,
+    amount: number,
+  ): Promise<AgentDocument | null> {
+    return this.agentsRepository.addTotalVesting(id, amount);
+  }
 }

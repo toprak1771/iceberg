@@ -3,7 +3,7 @@ export type TransactionHistoryEntry = {
     | 'ChangeStage'
     | 'AddListingAgent'
     | 'AddSellingAgent'
-    | 'Payment'
+    | 'CommissionCalculation'
     | 'Update';
   payload?: Record<string, unknown>;
   createdAt?: Date;

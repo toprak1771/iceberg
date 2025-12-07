@@ -1,25 +1,54 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create.transaction.dto';
-
+import { UpdateTransactionDto } from './dto/update.stage.transaction.dto';
+import { AddAgentDto } from './dto/add.agent.dto';
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
-  async create(@Body() dto: CreateTransactionDto) {
+  async create(@Body() dto: CreateTransactionDto, @Res() response: Response) {
     try {
-      return this.transactionsService.create(dto);
+      const savedTransaction = await this.transactionsService.create(dto);
+      response.status(HttpStatus.CREATED).json(savedTransaction);
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to create transaction';
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to create transaction',
+      });
+    }
+  }
+
+  @Put('changeStage')
+  async changeStage(
+    @Body() dto: UpdateTransactionDto,
+    @Res() response: Response,
+  ) {
+    try {
+      const updatedTransaction =
+        await this.transactionsService.changeStage(dto);
+      response.status(HttpStatus.OK).json(updatedTransaction);
+    } catch (error: unknown) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message:
+          error instanceof Error ? error.message : 'Failed to change stage',
+      });
+    }
+  }
+
+  @Post('addAgent')
+  async addAgent(@Body() dto: AddAgentDto, @Res() response: Response) {
+    try {
+      const addedAgent = await this.transactionsService.addAgent(dto);
+      response.status(HttpStatus.OK).json(addedAgent);
+    } catch (error: unknown) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: error instanceof Error ? error.message : 'Failed to add agent',
+      });
     }
   }
 }
