@@ -20,6 +20,10 @@ export class TransactionsRepository {
     return created.save();
   }
 
+  async findAll(): Promise<TransactionDocument[]> {
+    return this.transactionModel.find();
+  }
+
   async changeStage(data: {
     _id: string;
     stage: string;
@@ -160,5 +164,15 @@ export class TransactionsRepository {
       },
     ]);
     return transactions as FinancialBreakdownItem[];
+  }
+
+  async findTransactionHistoryById(
+    id: string,
+  ): Promise<TransactionHistoryEntry[]> {
+    const transaction = await this.transactionModel.findById(id);
+    if (transaction && transaction.transactionHistory) {
+      return transaction.transactionHistory;
+    }
+    return [];
   }
 }

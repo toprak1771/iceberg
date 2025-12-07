@@ -25,6 +25,15 @@ export class TransactionsService {
     return this.transactionsRepository.create(data);
   }
 
+  async findAll(): Promise<TransactionDocument[]> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    return await this.transactionsRepository.findAll();
+  }
+
+  async findById(id: string): Promise<TransactionDocument | null> {
+    return await this.transactionsRepository.findById(id);
+  }
+
   async changeStage(data: UpdateTransactionDto): Promise<TransactionDocument> {
     // Find transaction by id
     const transaction = await this.transactionsRepository.findById(data._id);
@@ -137,6 +146,13 @@ export class TransactionsService {
   async financialBreakdown(): Promise<FinancialBreakdownItem[]> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return await this.transactionsRepository.financialBreakdown();
+  }
+
+  async findTransactionHistoryById(
+    id: string,
+  ): Promise<TransactionHistoryEntry[]> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    return await this.transactionsRepository.findTransactionHistoryById(id);
   }
 
   controlStage(stage: string, previousStage: string): boolean {

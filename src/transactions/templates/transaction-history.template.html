@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transaction History Report</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f5f5f5;
+        padding: 20px;
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+      .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+      .transaction-info {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .transaction-info h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+      .info-row {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-row .label {
+        font-weight: 600;
+        width: 200px;
+        color: #666;
+      }
+      .info-row .value {
+        flex: 1;
+        color: #333;
+      }
+      .history-item {
+        background: white;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border-left: 5px solid #667eea;
+      }
+      .history-header {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+      }
+      .history-type {
+        font-weight: 600;
+        font-size: 1.1em;
+        color: #667eea;
+        text-transform: uppercase;
+      }
+      .history-date {
+        color: #666;
+        font-size: 0.9em;
+      }
+      .history-content {
+        padding: 20px;
+      }
+      .history-details {
+        margin-bottom: 15px;
+      }
+      .history-details p {
+        margin-bottom: 8px;
+        color: #555;
+      }
+      .type-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .type-ChangeStage {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+      .type-CommissionCalculation {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+      .type-AddListingAgent,
+      .type-AddSellingAgent {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+      .type-Update {
+        background: #f3e5f5;
+        color: #7b1fa2;
+      }
+      .agents-list {
+        margin-top: 15px;
+      }
+      .agents-list h4 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+      .agent-item {
+        background: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+      .agent-item:last-child {
+        margin-bottom: 0;
+      }
+      .agent-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .agent-row:last-child {
+        margin-bottom: 0;
+      }
+      .agent-label {
+        font-weight: 600;
+        color: #666;
+        width: 120px;
+      }
+      .agent-value {
+        flex: 1;
+        color: #333;
+      }
+      .amount-highlight {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #388e3c;
+      }
+      .role-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+      .role-listing {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+      .role-selling {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+      .agency-amount {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+      .agency-amount p {
+        margin: 0;
+        font-size: 1.1em;
+      }
+      .agency-amount .amount {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #388e3c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Transaction History Report</h1>
+      <p>Generated on: {{generatedDate}}</p>
+    </div>
+
+    {{transactionInfoHtml}}
+
+    <div style="margin-top: 30px">
+      <h2 style="color: #667eea; margin-bottom: 20px; font-size: 1.8em">
+        History Entries
+      </h2>
+      {{historyHtml}}
+    </div>
+  </body>
+</html>
+

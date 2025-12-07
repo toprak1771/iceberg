@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Put,
   Res,
@@ -31,6 +32,21 @@ export class TransactionsController {
           error instanceof Error
             ? error.message
             : 'Failed to create transaction',
+      });
+    }
+  }
+
+  @Get('all')
+  async findAll(@Res() response: Response) {
+    try {
+      const transactions = await this.transactionsService.findAll();
+      response.status(HttpStatus.OK).json(transactions);
+    } catch (error: unknown) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get all transactions',
       });
     }
   }
@@ -98,6 +114,64 @@ export class TransactionsController {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message:
           error instanceof Error ? error.message : 'Failed to generate PDF',
+      });
+    }
+  }
+
+  @Get(':id/history')
+  async findTransactionHistoryById(
+    @Param('id') id: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const history =
+        await this.transactionsService.findTransactionHistoryById(id);
+      response.status(HttpStatus.OK).json(history);
+    } catch (error: unknown) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get transaction history',
+      });
+    }
+  }
+
+  @Get(':id/history/pdf')
+  async findTransactionHistoryPdf(
+    @Param('id') id: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const transaction = await this.transactionsService.findById(id);
+      if (!transaction) {
+        response.status(HttpStatus.NOT_FOUND).json({
+          message: 'Transaction not found',
+        });
+        return;
+      }
+
+      const history =
+        await this.transactionsService.findTransactionHistoryById(id);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      const pdfBuffer = await this.pdfService.generateTransactionHistoryPdf(
+        transaction._id.toString(),
+        transaction.name || 'N/A',
+        history,
+      );
+
+      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader(
+        'Content-Disposition',
+        `attachment; filename="transaction-history-${transaction._id.toString()}-${new Date().toISOString().split('T')[0]}.pdf"`,
+      );
+      response.send(pdfBuffer);
+    } catch (error: unknown) {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to generate transaction history PDF',
       });
     }
   }

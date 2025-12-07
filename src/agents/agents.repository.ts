@@ -16,6 +16,10 @@ export class AgentsRepository {
     return created.save();
   }
 
+  async findAll(): Promise<AgentDocument[]> {
+    return this.agentModel.find();
+  }
+
   async findById(id: string): Promise<AgentDocument | null> {
     const agent = await this.agentModel.findById(id);
     if (agent) {

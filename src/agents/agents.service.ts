@@ -11,6 +11,10 @@ export class AgentsService {
     return this.agentsRepository.create(data);
   }
 
+  async findAll(): Promise<AgentDocument[]> {
+    return this.agentsRepository.findAll();
+  }
+
   async findById(id: string): Promise<AgentDocument | null> {
     return this.agentsRepository.findById(id);
   }
