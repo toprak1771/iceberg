@@ -12,7 +12,7 @@ import { CommissionDocument } from '../commission/schema/commission.schema';
 import { TransactionHistoryEntry } from './types/transaction-history.type';
 import { AgentsService } from '../agents/agents.service';
 import { AddAgentDto } from './dto/add.agent.dto';
-
+import { FinancialBreakdownItem } from './types/financial-breakdown.type';
 @Injectable()
 export class TransactionsService {
   constructor(
@@ -132,6 +132,11 @@ export class TransactionsService {
       throw new NotFoundException('Transaction not found to add agent');
     }
     return updated;
+  }
+
+  async financialBreakdown(): Promise<FinancialBreakdownItem[]> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+    return await this.transactionsRepository.financialBreakdown();
   }
 
   controlStage(stage: string, previousStage: string): boolean {

@@ -6,6 +6,7 @@ import { TransactionsRepository } from './transactions.repository';
 import { Transaction, transactionSchema } from './schema/transaction.schema';
 import { CommissionModule } from '../commission/commission.module';
 import { AgentsModule } from '../agents/agents.module';
+import { PdfService } from '../services/pdf.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { AgentsModule } from '../agents/agents.module';
     AgentsModule,
   ],
   controllers: [TransactionsController],
-  providers: [TransactionsService, TransactionsRepository],
+  providers: [TransactionsService, TransactionsRepository, PdfService],
 })
 export class TransactionsModule {}

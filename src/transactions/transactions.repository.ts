@@ -6,6 +6,8 @@ import { CreateTransactionDto } from './dto/create.transaction.dto';
 import { TransactionHistoryEntry } from './types/transaction-history.type';
 import { AddAgentDto } from './dto/add.agent.dto';
 import { AgentRoleEnum } from './dto/add.agent.dto';
+import { StageEnum } from './dto/update.stage.transaction.dto';
+import { FinancialBreakdownItem } from './types/financial-breakdown.type';
 @Injectable()
 export class TransactionsRepository {
   constructor(
@@ -70,5 +72,93 @@ export class TransactionsRepository {
       return updatedTransaction;
     }
     return null;
+  }
+
+  async financialBreakdown(): Promise<FinancialBreakdownItem[]> {
+    const transactions = await this.transactionModel.aggregate([
+      { $match: { stage: StageEnum.completed } },
+      {
+        $addFields: {
+          transactionIdString: { $toString: '$_id' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'commissions',
+          localField: 'transactionIdString',
+          foreignField: 'transactionId',
+          as: 'commission',
+        },
+      },
+      { $unwind: { path: '$commission', preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: {
+          path: '$commission.agents',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'agents',
+          localField: 'commission.agents.agentId',
+          foreignField: '_id',
+          as: 'agentInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$agentInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          description: { $first: '$description' },
+          commission: {
+            $first: {
+              _id: '$commission._id',
+              agencyAmount: '$commission.agencyAmount',
+            },
+          },
+          agents: {
+            $push: {
+              $cond: {
+                if: { $ne: ['$commission.agents', null] },
+                then: {
+                  agentId: '$commission.agents.agentId',
+                  role: '$commission.agents.role',
+                  amount: '$commission.agents.amount',
+                  name: '$agentInfo.name',
+                  surname: '$agentInfo.surname',
+                  email: '$agentInfo.email',
+                },
+                else: '$$REMOVE',
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          commission: {
+            _id: '$commission._id',
+            agencyAmount: '$commission.agencyAmount',
+            agents: {
+              $cond: {
+                if: { $eq: [{ $size: '$agents' }, 0] },
+                then: null,
+                else: '$agents',
+              },
+            },
+          },
+        },
+      },
+    ]);
+    return transactions as FinancialBreakdownItem[];
   }
 }
