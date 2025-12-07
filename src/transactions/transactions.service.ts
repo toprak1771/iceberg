@@ -133,13 +133,12 @@ export class TransactionsService {
   }
 
   async addAgent(data: AddAgentDto): Promise<TransactionDocument> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const updated = (await this.transactionsRepository.addAgent(
-      data,
-    )) as TransactionDocument | null;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const updated = await this.transactionsRepository.addAgent(data);
     if (!updated) {
       throw new NotFoundException('Transaction not found to add agent');
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return updated;
   }
 
@@ -220,12 +219,7 @@ export class TransactionsService {
   private async calculateCommission(
     _transaction: TransactionDocument,
   ): Promise<CommissionDocument | null> {
-    // Calculate commission - will be implemented later
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const commission = (await this.commissionService.calculateCommission(
-      _transaction,
-    )) as CommissionDocument | null;
-    return commission;
+    return await this.commissionService.calculateCommission(_transaction);
   }
 
   private addTransactionHistory(data: {

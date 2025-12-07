@@ -28,9 +28,18 @@ export class TransactionsRepository {
     _id: string;
     stage: string;
   }): Promise<TransactionDocument | null> {
+    // First, get the current transaction to save the current stage as previousStage
+    const currentTransaction = await this.transactionModel.findById(data._id);
+    if (!currentTransaction) {
+      return null;
+    }
+
+    const currentStage = currentTransaction.stage || null;
+
+    // Update both stage and previousStage
     const updatedTransaction = (await this.transactionModel.findByIdAndUpdate(
       data._id,
-      { stage: data.stage },
+      { stage: data.stage, previousStage: currentStage },
       { new: true },
     )) as TransactionDocument;
     return updatedTransaction;

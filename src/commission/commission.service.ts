@@ -12,7 +12,6 @@ export class CommissionService {
     return this.commissionRepository.create(data);
   }
 
-
   async calculateCommission(
     _transaction: TransactionDocument,
   ): Promise<CommissionDocument | null> {
@@ -63,7 +62,9 @@ export class CommissionService {
         const eachAgentAmount = agentsTotalAmount / uniqueCount;
 
         const pickRole = (id: string): 'listing' | 'selling' =>
-          listingAgents.some((a) => a.toString() === id) ? 'listing' : 'selling';
+          listingAgents.some((a) => a.toString() === id)
+            ? 'listing'
+            : 'selling';
 
         agents = agentIds.map((id) => ({
           agentId: id.toString(),
