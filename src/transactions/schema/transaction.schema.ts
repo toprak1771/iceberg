@@ -48,11 +48,12 @@ export class Transaction {
   stage: string;
 
   @Prop({
-    required: true,
+    type: String,
+    required: false,
     default: null,
     enum: ['agreement', 'earnest_money', 'title_deed', 'completed', null],
   })
-  previousStage?: string;
+  previousStage?: string | null;
 
   @Prop({ required: true, default: 0 })
   total_fee: number;

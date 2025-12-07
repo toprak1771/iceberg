@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { Agent } from '../../agents/schema/agent.schema';
+import { Transaction } from '../../transactions/schema/transaction.schema';
 
 export type CommissionDocument = HydratedDocument<Commission>;
 
@@ -8,6 +9,13 @@ export type CommissionDocument = HydratedDocument<Commission>;
   timestamps: { createdAt: 'created', updatedAt: 'updated' },
 })
 export class Commission {
+  @Prop({
+    type: Types.ObjectId,
+    ref: Transaction.name,
+    required: true,
+  })
+  transactionId: Types.ObjectId;
+
   @Prop({ required: true, default: 0 })
   agencyAmount: number;
 
