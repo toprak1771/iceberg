@@ -8,6 +8,16 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+interface ErrorWithMessage {
+  message?: string;
+  stack?: string;
+}
+
+interface ExceptionResponseObject {
+  message?: string;
+  [key: string]: unknown;
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
@@ -25,16 +35,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const exceptionResponse =
       exception instanceof HttpException
         ? exception.getResponse()
-        : (exception as any)?.message ?? 'Internal server error';
+        : ((exception as ErrorWithMessage)?.message ?? 'Internal server error');
 
     const message =
       typeof exceptionResponse === 'string'
         ? exceptionResponse
-        : (exceptionResponse as any)?.message ?? 'Internal server error';
+        : ((exceptionResponse as ExceptionResponseObject)?.message ??
+          'Internal server error');
+
+    const stack = (exception as ErrorWithMessage)?.stack;
 
     this.logger.error(
       `${request?.method} ${request?.url} -> ${status} ${message}`,
-      (exception as any)?.stack,
+      stack,
     );
 
     response.status(status).json({
@@ -50,4 +63,3 @@ export class AllExceptionsFilter implements ExceptionFilter {
     });
   }
 }
-
